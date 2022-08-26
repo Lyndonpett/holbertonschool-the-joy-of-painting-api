@@ -5,10 +5,10 @@ In this project we are going to explore the idea of ETL (Extract, Transform, Loa
 Your local public broadcasting station has an overwhelming amount of requests for information on The Joy of Painting. Their viewers want a website that allows them to filter the 403 episodes based on the following criteria:
 
 - Month of original broadcast
--- This will be useful for viewers who wish to watch paintings that were done during that same month of the year
+  - This will be useful for viewers who wish to watch paintings that were done during that same month of the year
 - Subject Matter
--- This will be useful for viewers who wish to watch specific items get painted
+  - This will be useful for viewers who wish to watch specific items get painted
 - Color Palette
--- This will be useful for viewers who wish to watch specific colors being used in a painting
+  - This will be useful for viewers who wish to watch specific colors being used in a painting
 
 Your local broadcasting station has already done some leg work to gather data, however it is spread out across multiple different files and formats, which makes the data unusable in its current form. They’ve also already hired another team to build a front-end to allow their viewers to filter episodes of The Joy of Painting and now they’ve hired you to help them with the process of designing and building a database that will house this collected data in a way that is usable and also build an API to access it.
