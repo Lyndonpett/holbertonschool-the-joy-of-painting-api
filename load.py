@@ -2,8 +2,10 @@ import pandas as pd
 import re
 from datetime import datetime
 from sqlalchemy import create_engine
-from sqlalchemy.sql import select
-# bob_ross database must be setup first before this will run
+
+# Prep for running load.py
+# bob_ross database must be setup first
+# index needs to be added as the column name to the first field in 'TJOP - Colors Used'
 engine = create_engine('mysql://root:root@localhost:3306/bob_ross')
 
 colors_used = pd.read_csv('./TJOP - Colors Used')
@@ -19,6 +21,9 @@ subject_matter = pd.read_csv('./TJOP - Subject Matter')
 ###
 episode_DF = subject_matter['EPISODE']
 
+###
+#   create subjects table without the TITLE field
+###
 subject_matter.drop(['TITLE'], axis=1, inplace=True)
 subject_matter.to_sql('subjects', con=engine, if_exists='replace')
 
@@ -86,15 +91,15 @@ hex_DF = colors_used[['colors', 'color_hex']]
 # setup key value pairs based on string input from rows of hex_DF, all col values of hex_DF start as strings
 hex_colors = {}
 for k, v in hex_DF.iterrows():
-    color_list = v.colors[1:-
-                          1].translate({ord(c): None for c in "'\\rn"}).split(', ')
-    hex_list = v.color_hex[1:-
-                           1].translate({ord(c): None for c in "'\\rn"}).split(', ')
+    color_list = v.colors[1:-1].replace("'", '').replace(
+        '\\r', '').replace('\\n', '').split(', ')
+    hex_list = v.color_hex[1:-1].replace("'", '').replace(
+        '\\r', '').replace('\\n', '').split(', ')
     hex_colors.update({color_list[i]: hex_list[i]
                       for i in range(len(color_list))})
 hex_import = pd.DataFrame(
     {'color': hex_colors.keys(), 'hex': hex_colors.values()})
-hex_import.to_sql('color_hex', con=engine, if_exists='replace')
+hex_import.to_sql('hex_values', con=engine, if_exists='replace')
 
 ###
 #   working with sqlAlchemy cursor example, get the list of colors from the colors table
@@ -104,6 +109,6 @@ hex_import.to_sql('color_hex', con=engine, if_exists='replace')
 # ret_val = conn.execute(sql_exec).mappings().all()[0]
 # print(ret_val)
 # return_colors = [ k for k, v in ret_val.items() if v == 1 ]
-# print('\return_colors\n', return_colors)
+# print('\nreturn_colors\n', return_colors)
 # # close our sql connection
 # conn.close()
